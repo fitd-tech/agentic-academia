@@ -135,6 +135,58 @@ A `PreToolUse` hook that blocks `git commit` commands whose messages don't follo
 4. **Interactive commits pass through.** Without a `-m` flag, we can't parse the message
    without blocking the command entirely — so we let it through and trust the user.
 
-## Suggested Next Experiments
+---
 
-- **Dry-run injector** — `PreToolUse` hook that *rewrites* destructive commands to add `--dry-run`
+### Dry-Run Injector (`dry-run-injector.sh`)
+
+A `PreToolUse` hook that *rewrites* destructive commands to add `--dry-run` before
+they execute. This demonstrates the input modification capability of `PreToolUse` —
+returning a changed tool input rather than just allowing or blocking.
+
+**What it rewrites:**
+- `git clean -fd` → `git clean -fd --dry-run`
+- `rsync -av --delete src/ dst/` → `rsync -av --delete src/ dst/ --dry-run`
+
+**Idempotent:** if `--dry-run` or `-n` is already present, passes through unchanged.
+
+**Wired in:** `.claude/settings.json` alongside the other Bash hooks
+
+#### The Input Modification Pattern
+
+This is what makes this hook different from the others. Instead of returning `{}`
+(allow) or `{ "decision": "block" }`, it returns a modified `tool_input`:
+
+```json
+{ "tool_input": { "command": "git clean -fd --dry-run" } }
+```
+
+Claude executes the modified command and sees the dry-run output. It can then
+decide whether to run the real command intentionally — with full knowledge of
+what will be affected.
+
+#### What Was Learned
+
+1. **Input modification is the most powerful `PreToolUse` capability.** Block/allow
+   is binary; modification lets you add guardrails without removing agency.
+
+2. **Use `printf '%s'` not `echo` when building JSON strings.** `echo` adds a trailing
+   newline that ends up in the JSON string value as `\n`.
+
+3. **Always use `grep -- pattern`** when patterns might start with `-`. Without `--`,
+   `grep` interprets leading dashes as flags. This is a recurring shell gotcha.
+
+4. **Make modifications idempotent.** Check for `--dry-run` before adding it —
+   a hook that doubles flags on repeated calls would be maddening to debug.
+
+## Hooks Section Complete
+
+All four experiments are done. The patterns covered:
+
+| Hook | Type | Technique |
+|------|------|-----------|
+| Secret scanner | PreToolUse | Block |
+| Edit logger | PostToolUse | Observe / log |
+| Commit normalizer | PreToolUse | Block with guidance |
+| Dry-run injector | PreToolUse | Input modification |
+
+**Next:** SKILL.md files — `.claude/skills/`

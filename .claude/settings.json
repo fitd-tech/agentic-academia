@@ -12,6 +12,10 @@
           {
             "type": "command",
             "command": "bash experiments/hooks/commit-normalizer.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash experiments/hooks/dry-run-injector.sh"
           }
         ]
       }
