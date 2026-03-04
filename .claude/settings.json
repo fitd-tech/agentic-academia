@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/anthonypelusocook/agentic-acedemia/experiments/hooks/secret-scanner.sh"
+            "command": "bash \"$(git rev-parse --show-toplevel)/experiments/hooks/secret-scanner.sh\""
           }
         ]
       }
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/anthonypelusocook/agentic-acedemia/experiments/hooks/edit-logger.sh"
+            "command": "bash \"$(git rev-parse --show-toplevel)/experiments/hooks/edit-logger.sh\""
           }
         ]
       }
