@@ -7,13 +7,13 @@
 #
 # Claude Code sends JSON to stdin:
 #   {
-#     "tool": "Edit",
-#     "input":  { "file_path": "...", "old_string": "...", "new_string": "..." },
-#     "output": { "result": "..." }
+#     "tool_name": "Edit",
+#     "tool_input":  { "file_path": "...", "old_string": "...", "new_string": "..." },
+#     "tool_response": { ... }
 #   }
 
 INPUT=$(cat)
-TOOL=$(echo "$INPUT" | jq -r '.tool')
+TOOL=$(echo "$INPUT" | jq -r '.tool_name')
 
 # Only log file-modifying tools
 case "$TOOL" in
@@ -29,5 +29,5 @@ jq -c \
   '{
     timestamp: $ts,
     tool: $tool,
-    file: (.input.file_path // .input.notebook_path // "unknown")
+    file: (.tool_input.file_path // .tool_input.notebook_path // "unknown")
   }' <<< "$INPUT" >> "$LOG_FILE"

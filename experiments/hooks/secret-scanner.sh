@@ -5,14 +5,14 @@
 # Intercepts Bash tool calls and blocks commands that appear to expose secrets.
 #
 # Claude Code sends JSON to stdin:
-#   { "tool": "Bash", "input": { "command": "echo $API_KEY" } }
+#   { "tool_name": "Bash", "tool_input": { "command": "echo $API_KEY" } }
 #
 # We return JSON to stdout:
 #   {}                                          → allow
 #   { "decision": "block", "reason": "..." }   → block with message shown to Claude
 
 INPUT=$(cat)
-TOOL=$(echo "$INPUT" | jq -r '.tool')
+TOOL=$(echo "$INPUT" | jq -r '.tool_name')
 
 # Only inspect Bash commands
 if [ "$TOOL" != "Bash" ]; then
@@ -20,7 +20,7 @@ if [ "$TOOL" != "Bash" ]; then
   exit 0
 fi
 
-COMMAND=$(echo "$INPUT" | jq -r '.input.command')
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command')
 
 PATTERNS=(
   # Echoing or printing env vars with secret-like names
