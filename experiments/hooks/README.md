@@ -95,5 +95,6 @@ after every `Edit`, `Write`, or `NotebookEdit` tool call.
 
 ## Suggested Next Experiments
 
+
 - **Commit normalizer** — `PreToolUse` hook that enforces conventional commit format
 - **Dry-run injector** — `PreToolUse` hook that adds `--dry-run` to destructive commands
