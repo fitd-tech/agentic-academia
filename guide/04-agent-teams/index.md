@@ -5,7 +5,8 @@ even most senior engineers haven't used this in production yet.
 
 ## Status
 
-> Work in progress. See `experiments/agent-teams/` for working examples.
+> Builder/Validator experiment scaffolded. See `experiments/agent-teams/builder-validator/`.
+> Requires Opus 4.6 + `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` to run live.
 
 ## What Makes This Different
 

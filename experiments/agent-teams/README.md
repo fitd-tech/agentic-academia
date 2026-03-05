@@ -10,7 +10,7 @@ export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 
 ## Experiments
 
-*None yet — add one to get started.*
+1. **[builder-validator/](builder-validator/)** — Builder writes a function, Validator reviews it; demonstrates shared task list + dependency blocking
 
 ## Suggested Starting Points
 
