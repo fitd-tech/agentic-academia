@@ -1,0 +1,78 @@
+[00:00:01] Starting CI pipeline: build-and-test
+[00:00:01] Runner: ubuntu-22.04 / Node 20.11.0
+[00:00:01] Repo: agentic-academia @ commit e9ef99b
+[00:00:02] Cache hit: node_modules (key: lockfile-abc123)
+[00:00:02] Restored 847 packages from cache
+[00:00:03] Running: npm install --frozen-lockfile
+[00:00:03] up to date, audited 847 packages in 1.2s
+[00:00:03] 3 packages are looking for funding
+[00:00:03]   run `npm fund` for details
+[00:00:04] Running: npm run lint
+[00:00:04] > lint
+[00:00:04] > eslint src/**/*.ts
+[00:00:05] /src/utils/parser.ts
+[00:00:05]   12:3  warning  Prefer const over let for 'result'  prefer-const
+[00:00:05]   47:1  warning  Missing return type annotation       @typescript-eslint/explicit-function-return-type
+[00:00:06] /src/hooks/validate.ts
+[00:00:06]   8:5   warning  Unused variable 'ctx'               no-unused-vars
+[00:00:07] /src/agents/runner.ts
+[00:00:07]   103:7  error   Cannot read property 'output' of undefined  no-unsafe-member-access
+[00:00:07]   118:3  error   Unreachable code detected                    no-unreachable
+[00:00:08] /src/skills/loader.ts
+[00:00:08]   22:1  warning  Line too long (143 chars)            max-len
+[00:00:09] /src/config/settings.ts
+[00:00:09]   5:1   warning  Prefer named exports                 import/prefer-default-export
+[00:00:10] Lint completed with 2 errors, 5 warnings
+[00:00:11] Running: npm run typecheck
+[00:00:11] > typecheck
+[00:00:11] > tsc --noEmit
+[00:00:13] src/agents/runner.ts:103:7 - error TS2532: Object is possibly 'undefined'.
+[00:00:13]   103       const out = result.output.trim()
+[00:00:13]             ~~~~~~~~~~~
+[00:00:13] src/agents/runner.ts:118:3 - error TS7027: Unreachable code detected.
+[00:00:13]   118       return null
+[00:00:13]             ~~~~~~~~~~~
+[00:00:13] src/memory/store.ts:67:14 - error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+[00:00:14]   67       write(key, value)
+[00:00:14]                        ~~~~~
+[00:00:15] Found 3 errors.
+[00:00:16] Running: npm test
+[00:00:16] > test
+[00:00:16] > jest --coverage
+[00:00:17] PASS  src/utils/parser.test.ts (1.2s)
+[00:00:17]   ✓ parses valid hook JSON (12ms)
+[00:00:17]   ✓ rejects missing tool_name (8ms)
+[00:00:17]   ✓ handles empty stdin (5ms)
+[00:00:18] PASS  src/config/settings.test.ts (0.8s)
+[00:00:18]   ✓ loads defaults when file missing (11ms)
+[00:00:18]   ✓ merges user overrides (7ms)
+[00:00:19] FAIL  src/agents/runner.test.ts (2.1s)
+[00:00:19]   ✓ launches subagent with correct params (15ms)
+[00:00:19]   ✗ handles undefined result (FAILED)
+[00:00:19]   ✓ respects run_in_background flag (9ms)
+[00:00:20]   ● handles undefined result
+[00:00:20]     TypeError: Cannot read properties of undefined (reading 'output')
+[00:00:20]       at AgentRunner.run (src/agents/runner.ts:103:26)
+[00:00:20]       at Object.<anonymous> (src/agents/runner.test.ts:44:18)
+[00:00:20]       at Promise.then.completed (jest-circus/build/utils.js:390:28)
+[00:00:21] FAIL  src/memory/store.test.ts (1.4s)
+[00:00:21]   ✓ reads existing key (6ms)
+[00:00:21]   ✗ write handles undefined value (FAILED)
+[00:00:22]   ● write handles undefined value
+[00:00:22]     Error: Expected write(key, value) to throw, but it did not
+[00:00:22]       at Object.<anonymous> (src/memory/store.test.ts:67:5)
+[00:00:23] PASS  src/hooks/validate.test.ts (0.9s)
+[00:00:23]   ✓ blocks invalid commit format (14ms)
+[00:00:23]   ✓ allows conventional commits (6ms)
+[00:00:24] PASS  src/skills/loader.test.ts (0.7s)
+[00:00:24]   ✓ loads skill by name (8ms)
+[00:00:24]   ✓ throws on missing skill (4ms)
+[00:00:25] Coverage summary:
+[00:00:25]   Statements   : 74.2% (318/428)
+[00:00:25]   Branches     : 68.9% (62/90)
+[00:00:25]   Functions    : 81.3% (52/64)
+[00:00:25]   Lines        : 74.5% (313/420)
+[00:00:26] Coverage thresholds not met: lines (74.5% < 80%)
+[00:00:27] Tests: 14 passed, 2 failed
+[00:00:27] Pipeline FAILED
+[00:00:27] Duration: 26s
