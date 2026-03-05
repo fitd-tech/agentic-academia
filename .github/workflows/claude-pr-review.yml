@@ -1,0 +1,59 @@
+name: Claude PR Review
+
+# Triggered two ways:
+# 1. Interactive — someone comments "@claude review this" on a PR
+# 2. Automated — any PR opened/updated against main gets an audit
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write   # needed to post review comments
+  issues: write          # needed for issue_comment trigger
+
+jobs:
+  # ── Interactive mode ───────────────────────────────────────────────────────
+  # Fires when someone writes "@claude <anything>" in a PR comment
+  interactive-review:
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history for git log context
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # No prompt — Claude reads the comment and responds naturally
+
+  # ── Automated mode ─────────────────────────────────────────────────────────
+  # Fires on every PR push; runs a headless hook audit and posts results
+  automated-hook-audit:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            This PR may have changed hook scripts in experiments/hooks/.
+
+            1. List any .sh files changed in this PR (use git diff --name-only origin/main...HEAD)
+            2. For each changed hook script, read it and check:
+               - Does it handle malformed JSON gracefully (missing keys, empty stdin)?
+               - Does it exit with the correct code (0 = allow/modify, non-zero = block)?
+               - Are there any unquoted variables that could cause word splitting?
+            3. Post a concise review comment summarizing findings.
+               Use ✅ for no issues, ⚠️ for warnings, ❌ for blocking issues.
+            4. If no hook scripts changed, post: "No hook script changes detected."

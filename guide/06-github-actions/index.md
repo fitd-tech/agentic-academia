@@ -4,7 +4,7 @@ Running Claude Code without a human in the loop — in CI, on a schedule, or tri
 
 ## Status
 
-> Work in progress. See `.github/workflows/` for working examples in this repo.
+> Working examples in `experiments/github-actions/` and `.github/workflows/claude-pr-review.yml`.
 
 ## Headless Mode
 

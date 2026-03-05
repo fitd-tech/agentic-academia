@@ -1,0 +1,38 @@
+{
+  "audit_timestamp": "2026-03-05T00:00:00Z",
+  "hooks": [
+    {
+      "name": "secret-scanner.sh",
+      "hook_type": "PreToolUse",
+      "matcher": "Bash",
+      "can_block": true,
+      "risk_level": "medium",
+      "risk_reason": "Regex patterns may produce false positives on legitimate env inspection commands."
+    },
+    {
+      "name": "edit-logger.sh",
+      "hook_type": "PostToolUse",
+      "matcher": "Edit|Write|NotebookEdit",
+      "can_block": false,
+      "risk_level": "low",
+      "risk_reason": "Observation-only; appends to a local log file with no external side effects."
+    },
+    {
+      "name": "commit-normalizer.sh",
+      "hook_type": "PreToolUse",
+      "matcher": "Bash",
+      "can_block": true,
+      "risk_level": "low",
+      "risk_reason": "Only blocks git commit commands with non-conventional messages; well-scoped."
+    },
+    {
+      "name": "dry-run-injector.sh",
+      "hook_type": "PreToolUse",
+      "matcher": "Bash",
+      "can_block": false,
+      "risk_level": "low",
+      "risk_reason": "Modifies destructive commands to add --dry-run; reduces risk rather than adding it."
+    }
+  ],
+  "summary": "All hooks are well-scoped with clear purposes; no high-risk patterns detected."
+}
