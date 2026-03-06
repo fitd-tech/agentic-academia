@@ -77,3 +77,17 @@ See: `experiments/subagents/worktree-isolation/`
 - Each subagent starts a fresh session — no memory of prior calls
 - Tool access depends on subagent type
 - `run_in_background: true` required for true parallelism
+
+## Starter Templates
+
+Paste-and-customize Agent prompts for the most common subagent use cases.
+All templates live in [`templates/subagents/`](../../templates/subagents/).
+
+| Template | Pattern | Use case |
+|----------|---------|----------|
+| `parallel-pr-review.md` | Fan-out | 3 agents review a PR: security, performance, test coverage |
+| `codebase-onboarding.md` | Context protection | Read a large codebase, return a structured summary |
+| `build-log-analyzer.md` | Context protection | Extract failures and root causes from noisy build output |
+| `parallel-file-analyzer.md` | Fan-out (generic) | Analyze N files simultaneously; fill in your own goal |
+| `worktree-feature-builder.md` | Worktree isolation | Build a complete feature on an isolated branch |
+| `dependency-auditor.md` | Context protection | Audit dependencies for vulnerabilities and staleness |

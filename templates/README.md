@@ -51,6 +51,19 @@ Then edit `CLAUDE.md` to describe your project.
 | `hooks/commit-normalizer.sh` | `.claude/hooks/commit-normalizer.sh` | PreToolUse — enforces conventional commit format |
 | `hooks/edit-logger.sh` | `.claude/hooks/edit-logger.sh` | PostToolUse — logs file edits to JSONL |
 
+### Subagent Prompts
+
+| File | Pattern | Use case |
+|------|---------|----------|
+| `subagents/parallel-pr-review.md` | Fan-out | 3 agents review a PR simultaneously: security, performance, test coverage |
+| `subagents/codebase-onboarding.md` | Context protection | Subagent reads a large codebase, returns structured summary |
+| `subagents/build-log-analyzer.md` | Context protection | Subagent reads noisy build/test output, returns only failures + root causes |
+| `subagents/parallel-file-analyzer.md` | Fan-out (generic) | N agents analyze N files simultaneously; fill in your own analysis goal |
+| `subagents/worktree-feature-builder.md` | Worktree isolation | Subagent builds a complete feature on an isolated branch |
+| `subagents/dependency-auditor.md` | Context protection | Subagent reads dependency files, returns security + staleness audit |
+
+Each template includes a paste-ready Agent prompt with `ALL_CAPS` placeholders, configuration notes, and a customization guide.
+
 ## Customization
 
 **CLAUDE.md**: Replace all bracketed placeholders (`[e.g. TypeScript]`) with your actual stack. Add architecture decisions as you make them.
